@@ -1,0 +1,7 @@
+<Configuration>
+	<Port>80</Port>
+	<BindAllIPs>Yes</BindAllIPs>
+	<BindToIP>127.0.0.1</BindToIP>
+	<RootPath>C:\Source\FHTTPd\WWWRoot</RootPath>
+	<DefaultFile>Index.htm</DefaultFile>
+</Configuration>

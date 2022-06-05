@@ -1,0 +1,26 @@
+/****************************************************************************
+
+
+win16.rc
+
+produced by Borland Resource Workshop
+
+
+*****************************************************************************/
+
+#define IDD_MAIN	1
+#define IDC_EDIT1	101
+#define IDC_TEXTLOG	102
+#define IDC_LISTBOX1	102
+
+IDD_MAIN DIALOG 0, 0, 543, 228
+STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION ""
+FONT 8, "MS Sans Serif"
+{
+ CONTROL "OK", IDOK, "BUTTON", BS_PUSHBUTTON | BS_CENTER | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 472, 4, 50, 14
+ CONTROL "Cancel", IDCANCEL, "BUTTON", BS_PUSHBUTTON | BS_CENTER | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 472, 24, 50, 14
+ CONTROL "Help", IDHELP, "BUTTON", BS_PUSHBUTTON | BS_CENTER | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 472, 44, 50, 14
+ CONTROL "ListBox1", IDC_TEXTLOG, "listbox", LBS_STANDARD | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 4, 4, 464, 220
+}
+

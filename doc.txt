@@ -1,0 +1,2 @@
+Used IMPLIB to create a LIB from a DLL for winsock.dll found on Windows 3.11
+
