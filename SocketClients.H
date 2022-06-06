@@ -65,20 +65,22 @@ public:
         memset(&pClient->Header, 0, sizeof(SOCKETCLIENTHEADER));
     }
 
-	void Upsert(SOCKET socket)
+	SOCKETCLIENTENTITY *Upsert(SOCKET socket)
     {
     	for(int i = 0; i < Entities.Count; i++)
         {
         	if(Entities.Collection[i].InUse == false)
             {
 	            InitClient(&Entities.Collection[i], socket, i);
-                return;
+                return &Entities.Collection[i];
             }
 		}
 
 	    Entities.Count++;
 	    Entities.Collection = (SOCKETCLIENTENTITY*) realloc(Entities.Collection, sizeof(SOCKETCLIENTENTITY) * Entities.Count);
         InitClient(&Entities.Collection[Entities.Count - 1], socket, Entities.Count - 1);
+
+        return &Entities.Collection[Entities.Count - 1];
     }
 
     void Send(int index, char *sBuf, int iSz)

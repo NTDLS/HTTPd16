@@ -8,6 +8,9 @@ public:
 	bool Start();
 	void Stop();
 
+	void Log(SOCKETCLIENTENTITY *pClient, char *sText);
+	void Log(char *sText);
+
 	void TestSendHTTP(char *returnString);
     bool SendFile(char *sFileName, SOCKETCLIENTENTITY *pClient);
 

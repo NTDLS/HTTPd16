@@ -67,7 +67,7 @@ bool SockServ::Start()
 	ListenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (ListenSocket == INVALID_SOCKET)
 	{
-	    ListBox_Insert(hLogText, "socket() failed.");
+	    Log("socket() failed.");
         return false;
 	}
 
@@ -93,7 +93,7 @@ bool SockServ::Start()
 
 	if (bind(ListenSocket, (SOCKADDR *) &service, sizeof(service)) == SOCKET_ERROR)
 	{
-	    ListBox_Insert(hLogText, "bind() failed.");
+	    Log("bind() failed.");
 		closesocket(ListenSocket);
         return false;
 	}
@@ -102,7 +102,7 @@ bool SockServ::Start()
 	// Listen for incoming connection requests. on the created socket
 	if (listen(ListenSocket, 1) == SOCKET_ERROR)
 	{
-	    ListBox_Insert(hLogText, "listen() failed.");
+	    Log("listen() failed.");
 		closesocket(ListenSocket);
         return false;
 	}
@@ -114,7 +114,7 @@ bool SockServ::Start()
 	if (ioctlsocket(ListenSocket, FIONBIO, &NonBlock) == SOCKET_ERROR)
 	{
 		//Set_Text(hUsername, "Setting non blocking failed");
-	    ListBox_Insert(hLogText, "ioctlsocket() failed.");
+	    Log("ioctlsocket() failed.");
 		return false;
 	}
 
@@ -122,7 +122,7 @@ bool SockServ::Start()
 
     SetTimer(hOwner, IDT_INTERRUPT_TIMER, 10, (TIMERPROC)InterruptTimerProc);
 
-    ListBox_Insert(hLogText, "Waiting for client to connect....");
+    Log("Ready for connections....");
 
 	return true;
 }
@@ -161,7 +161,7 @@ void SockServ::TCPPump(void)
 	if(selectResult == SOCKET_ERROR)
     {
     	sprintf(sLogText, "select() failed %ld", WSAGetLastError());
-	    ListBox_Insert(hLogText, sLogText);
+	    Log(sLogText);
 
         shutdown(ListenSocket, 2); //SD_BOTH
 	    closesocket(ListenSocket);
@@ -171,7 +171,7 @@ void SockServ::TCPPump(void)
 	    if(FD_ISSET(ListenSocket, &exceptSet))
         {
 	    	sprintf(sLogText, "socket exception %ld", WSAGetLastError());
-		    ListBox_Insert(hLogText, sLogText);
+		    Log(sLogText);
 			shutdown(ListenSocket, 2); //SD_BOTH*
 		    closesocket(ListenSocket);
         }
@@ -182,13 +182,14 @@ void SockServ::TCPPump(void)
 		    if (socket == INVALID_SOCKET)
 		    {
 		    	sprintf(sLogText, "accept() failed %ld", WSAGetLastError());
-			    ListBox_Insert(hLogText, sLogText);
+			    Log(sLogText);
 		        closesocket(socket);
 		    }
             else
             {
-			    ListBox_Insert(hLogText, "Connection accepted.");
-            	Clients.Upsert(socket);
+			    Log("Connection accepted.");
+            	SOCKETCLIENTENTITY *pClient = Clients.Upsert(socket);
+			    Log(pClient, "Connection client assigned.");
             }
         }
 	}
@@ -217,24 +218,24 @@ void SockServ::TCPPump(void)
 
 				if(FD_ISSET(pClient->Socket, &readSet))
 				{
-					sprintf(sLogText, "Free Pages: %lu", pMem->Pages.uCount - pMem->Pages.uUsed);
-					ListBox_Insert(hLogText, sLogText);
+					//sprintf(sLogText, "Free Pages: %lu", pMem->Pages.uCount - pMem->Pages.uUsed);
+					//Log(sLogText);
 
-			    	sprintf(sLogText, "Receiving %d", pClient->Index);
-				    ListBox_Insert(hLogText, sLogText);
+			    	//sprintf(sLogText, "Receiving %d", pClient->Index);
+				    //Log(sLogText);
 
 					unsigned long ulReceivedHeaderAlloc = 4096ul;
 					char *sReceivedHeader = (char*) calloc(ulReceivedHeaderAlloc, 1);
 					int iReceivedHeaderSz = recv(pClient->Socket, sReceivedHeader, ulReceivedHeaderAlloc, 0);
 
-			    	sprintf(sLogText, "Client %d received %d bytes.", pClient->Index, iReceivedHeaderSz);
-				    ListBox_Insert(hLogText, sLogText);
+			    	//sprintf(sLogText, "Client %d received %d bytes.", pClient->Index, iReceivedHeaderSz);
+				    //Log(sLogText);
 
                     if(iReceivedHeaderSz == SOCKET_ERROR)
                     {
                     	free(sReceivedHeader);
 				    	sprintf(sLogText, "recv() failed %ld", WSAGetLastError());
-					    ListBox_Insert(hLogText, sLogText);
+					    Log(pClient, sLogText);
 						Clients.Disconnect(pClient->Index);
                         continue;
                     }
@@ -242,7 +243,7 @@ void SockServ::TCPPump(void)
                     {
                     	free(sReceivedHeader);
 				    	sprintf(sLogText, "Client %d disconnected", pClient->Index);
-					    ListBox_Insert(hLogText, sLogText);
+					    Log(pClient, sLogText);
 						Clients.Disconnect(pClient->Index);
                         continue;
                     }
@@ -253,7 +254,6 @@ void SockServ::TCPPump(void)
                         Clients.Disconnect(pClient->Index);
                         continue;
                     }
-
 
 					int iFurthestExtent = 0;
                     int iBufferAlloc = 2048;
@@ -289,7 +289,7 @@ void SockServ::TCPPump(void)
 
 					//If the request is a directory, then append the default filename.
                     if(IsDirectory(pClient->Header.FullRequest))
-                    {                                                                                                       
+                    {
 					    free(pClient->Header.FullRequest);
 	                    sprintf(sBuffer, "%s\\%s", this->sRootPath, pClient->Header.Request);
 	                    Trim(sBuffer, '\\');
@@ -314,7 +314,7 @@ void SockServ::TCPPump(void)
 						pClient->Header.Connection,
 						pClient->Header.Referer,
 						pClient->Header.ContentType);
-                	ListBox_Insert(hLogText, sDebug);
+                	Log(pClient, sDebug);
                     free(sDebug);
 
                     free(sBuffer);
@@ -322,13 +322,12 @@ void SockServ::TCPPump(void)
 				}
 				if(FD_ISSET(pClient->Socket, &writeSet))
 				{
-			    	sprintf(sLogText, "Sending %d", pClient->Index);
-				    ListBox_Insert(hLogText, sLogText);
-
+			    	//sprintf(sLogText, "Sending %d", pClient->Index);
+				    //Log(pClient, sLogText);
                     SendFile(pClient->Header.FullRequest, pClient);
 
 			    	sprintf(sLogText, "Disconnecting %d", pClient->Index);
-				    ListBox_Insert(hLogText, sLogText);
+				    Log(pClient, sLogText);
 
 					Clients.Disconnect(pClient->Index);
 				}
@@ -341,6 +340,11 @@ void SockServ::TCPPump(void)
 
 bool SockServ::SendFile(char *sFileName, SOCKETCLIENTENTITY *pClient)
 {
+	if(!sFileName)
+	{
+    	return false;
+	}
+
     char sHeader[255];
 
 	FILE *hFile = fopen(sFileName, "rb");
@@ -369,7 +373,9 @@ bool SockServ::SendFile(char *sFileName, SOCKETCLIENTENTITY *pClient)
 			lBytesToRead = lBytesRemain;
         }
 
+
 	    long lBytesRead = fread(sBuf, 1, lBytesToRead, hFile);
+
 		Clients.Send(pClient->Index, sBuf, lBytesRead);
 
         lBytesRemain -= lBytesRead;
@@ -443,6 +449,26 @@ void SockServ::TestSendHTTP(char *returnString)
     }
 
 	closesocket(sock);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void SockServ::Log(SOCKETCLIENTENTITY *pClient, char *sText)
+{
+	StringBuilder builder;
+    builder.AppendF("C[%d]: ", pClient->Index);
+    builder.Append(sText);
+    ListBox_Insert(hLogText, builder.Buffer);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void SockServ::Log(char *sText)
+{
+	StringBuilder builder;
+    builder.Append("C[*]: ");
+    builder.Append(sText);
+    ListBox_Insert(hLogText, builder.Buffer);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
