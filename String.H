@@ -106,6 +106,8 @@ int StrCat(char *sDest, int iMaxSz, int iDestLen, const char *sAppend, int iAppe
 int Right(char *sOutBuf, int iMaxSz, const char *sInBuf, int iInLen, int iRight);
 int Left(char *sOutBuf, int iMaxSz, const char *sInBuf, int iInLen, int iLeft);
 
+int RTrim(char *sInOutBuf, char tc);
+int LTrim(char *sInOutBuf, char tc);
 int Trim(char *sInOutBuf, char tc);
 int Trim(char *sInOutBuf, int iLen);
 int Trim(char *sInOutBuf);

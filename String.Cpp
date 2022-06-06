@@ -151,6 +151,14 @@ char *LCase(char *sBuf)
 
 int Trim(char *sInOutBuf, char tc)
 {
+	LTrim(sInOutBuf, tc);
+	return RTrim(sInOutBuf, tc);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int RTrim(char *sInOutBuf, char tc)
+{
 	int iLength = strlen(sInOutBuf);
 
     while(sInOutBuf[iLength - 1] == tc)
@@ -160,6 +168,30 @@ int Trim(char *sInOutBuf, char tc)
     }
 
     return iLength;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int LTrim(char *sInOutBuf, char tc)
+{
+	int iLength = strlen(sInOutBuf);
+    int iPos = 0;
+
+    while(iPos < iLength)
+    {
+		if(sInOutBuf[iPos] != tc)
+        {
+	        break;
+        }
+        iPos++;
+    }
+
+    if(iPos > 0)
+    {
+    	memcpy(sInOutBuf, sInOutBuf + iPos, iLength - iPos);
+    }
+
+    return iLength - iPos;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
