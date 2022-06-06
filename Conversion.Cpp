@@ -19,6 +19,56 @@
 #include "Memory.H"
 #include "Conversion.H"
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+char *FileSizeFriendly(unsigned long ulFileSize, int iDecimalPlaces, char *sOut, int iMaxOutSz)
+{
+	bool bAllowChange = false;
+
+	if (iDecimalPlaces < 0)
+	{
+		bAllowChange = true;
+		iDecimalPlaces = (iDecimalPlaces * -1);
+	}
+
+	long i64DivideBy = 1;
+
+	char *sSzStr = "";
+	char sFormatted[128];
+	char sFormat[10];
+
+
+	if (ulFileSize >= GigaByte) {
+		i64DivideBy = GigaByte;
+		sSzStr = "GB";
+	}
+	else if (ulFileSize >= MegaByte) {
+		i64DivideBy = MegaByte;
+		sSzStr = "MB";
+	}
+	else if (ulFileSize >= KiloByte) {
+		i64DivideBy = KiloByte;
+		sSzStr = "KB";
+	}
+	else {
+		i64DivideBy = 1;
+		if (bAllowChange)
+		{
+			iDecimalPlaces = 0;
+		}
+		sSzStr = "B";
+	}
+
+	sprintf(sFormat, "%%.%df", iDecimalPlaces);
+	sprintf(sOut, sFormat, (double)ulFileSize / i64DivideBy);
+	FormatFloatString(sFormatted, sizeof(sFormatted), sOut);
+
+	sprintf(sOut, "%s %s", sFormatted, sSzStr);
+
+	return sOut;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int Bin2HexFriendly(void *lpTarget, int iMaxSz, const void *lpSrc, int iSz, int iBytes, int iWidth)

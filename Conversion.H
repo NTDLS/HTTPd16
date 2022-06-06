@@ -1,15 +1,22 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Copyright © NetworkDLS 2010, All rights reserved
 //
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF 
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A 
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifndef _NSWFL_CONVERSION_H_
 #define _NSWFL_CONVERSION_H_
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#define KiloByte 1024
+#define MegaByte 1048576
+#define GigaByte 1073741824
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+char *FileSizeFriendly(unsigned long ulFileSize, int iDecimalPlaces, char *sOut, int iMaxOutSz);
 char *FloatChar(char *sOutVal, int iMaxSz, float fInput);
 char *DoubleChar(char *sOutVal, int iMaxSz, double dInput);
 char *IntChar(char *sOutVal, int iMaxSz, int iInput);
