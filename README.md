@@ -2,6 +2,8 @@
 
 Yea, a new 16bit webserver for Windows 3.11, so what?!
 
+Keep in mind that I didn't put much effort into this, so dont start critiquing the code.
+
 I've always liked retro-development, I think because of the challenges. The resource constraints, lack of digital documentation (you can’t google much), the modern expectations of UI and configurability (it’s got to support JSON, right?).
 Plus I get to push the limits of these older operating systems using resources they never thought they’d see, and that’s fun! Last time I did this it lost me a few hundred dollars to throw 8MB of RAM at the problem.
 
