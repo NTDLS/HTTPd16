@@ -1,15 +1,13 @@
 # HTTPd16
 
-Yea, a new 16bit webserver for Windows 3.11, so what?!
+Yeah, it’s a *new* 16-bit web server for Windows 3.11... so what?!
 
-Keep in mind that I didn't put much effort into this, so dont start critiquing the code.
+Look, I didn’t put a ton of effort into this, so please don’t go digging through the code looking for elegance. This project exists because I genuinely enjoy retro-development. It’s the constraints that make it interesting: limited memory, practically no modern documentation (good luck Googling anything), and yet we still expect things like JSON support in 2025.
 
-I've always liked retro-development, I think because of the challenges. The resource constraints, lack of digital documentation (you can’t google much), the modern expectations of UI and configurability (it’s got to support JSON, right?).
-Plus I get to push the limits of these older operating systems using resources they never thought they’d see, and that’s fun! Last time I did this it cost me a few hundred dollars to throw 8MB of RAM at the problem.
+There’s something fun about pushing old operating systems to do things they were never meant to. The last time I went down this road, I spent a few hundred bucks just to throw 8MB of RAM at a problem. Totally worth it.
 
-One thing that I don’t think many people know or remember is the memory allocation restraints. Even if you have 16MB free, its not conventionally available via typical memory management APIs such as malloc() and free(). You can use GlobalAlloc and lock memory, but that is slooooow as Christmas.
-In this rendition, I have baked in my own memory manager that gobbles up a configurable amount of RAM and doles it out in paged chunks. That alone was pretty fun!
+One often-forgotten challenge is memory allocation. Even if you have 16MB free, good luck accessing it conventionally—malloc() and free() just don’t cut it. You can use GlobalAlloc and lock memory, but that’s about as fast as Christmas morning when you're 80. So in this build, I included my own memory manager that grabs a configurable chunk of RAM and hands it out in paged segments. Honestly, that part was a blast.
 
-Anyway, likely more to come.
+Anyway, more may come. Or not. But hey—enjoy the weirdness.
 
 ![image](https://user-images.githubusercontent.com/11428567/172197547-ef3dac79-c197-4922-8b35-37132caa0ac5.png)
