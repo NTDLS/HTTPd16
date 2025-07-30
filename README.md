@@ -2,6 +2,9 @@
 
 Yeah, it’s a *new* 16-bit web server for Windows 3.11... so what?!
 
+This project was built with **Borland C++ 5.02** which can be found all ove the internet, but I've placed it here for convenience: [Borland C++ 5.02](https://www.networkdls.com/Entity/borland-5-02)
+
+
 Look, I didn’t put a ton of effort into this, so please don’t go digging through the code looking for elegance. This project exists because I genuinely enjoy retro-development. It’s the constraints that make it interesting: limited memory, practically no modern documentation (good luck Googling anything), and yet we still expect things like JSON support in 2025.
 
 There’s something fun about pushing old operating systems to do things they were never meant to. The last time I went down this road, I spent a few hundred bucks just to throw 8MB of RAM at a problem. Totally worth it.
